@@ -36,11 +36,66 @@ class ContactManager:
             email = self.sheet.cell(row=row, column=3).value
             print(f"Name: {name}, Phone: {phone}, Email: {email}")
 
+    def edit_contact(self, name, new_phone, new_email):
+        for row in range(2, self.sheet.max_row + 1):
+            if self.sheet.cell(row=row, column=1).value == name:
+                self.sheet.cell(row=row, column=2, value=new_phone)
+                self.sheet.cell(row=row, column=3, value=new_email)
+                self.workbook.save(self.filename)
+                print(f"Contact '{name}' updated successfully.")
+                return
+        print(f"Contact '{name}' not found.")
+
+    def search_contact(self, name):
+        for row in range(2, self.sheet.max_row + 1):
+            if self.sheet.cell(row=row, column=1).value == name:
+                phone = self.sheet.cell(row=row, column=2).value
+                email = self.sheet.cell(row=row, column=3).value
+                print(f"Name: {name}, Phone: {phone}, Email: {email}")
+                return
+        print(f"Contact '{name}' not found.")
+
+    def delete_contact(self, name):
+        for row in range(2, self.sheet.max_row + 1):
+            if self.sheet.cell(row=row, column=1).value == name:
+                self.sheet.delete_rows(row, amount=1)
+                self.workbook.save(self.filename)
+                print(f"Contact '{name}' deleted successfully.")
+                return
+        print(f"Contact '{name}' not found.")
+
 # Example usage
 contact_manager = ContactManager("contacts.xlsx")
 
-contact_manager.add_contact("John Doe", "123-456-7890", "john@example.com")
-contact_manager.add_contact("Jane Smith", "987-654-3210", "jane@example.com")
+while True:
+    print("\nContact Manager")
+    print("1. Add Contact")
+    print("2. Edit Contact")
+    print("3. Search Contact")
+    print("4. Delete Contact")
+    print("5. List Contacts")
+    print("6. Exit")
+    choice = input("Enter your choice (1-6): ")
 
-print("Contacts:")
-contact_manager.list_contacts()
+    if choice == "1":
+        name = input("Enter name: ")
+        phone = input("Enter phone: ")
+        email = input("Enter email: ")
+        contact_manager.add_contact(name, phone, email)
+    elif choice == "2":
+        name = input("Enter name of contact to edit: ")
+        new_phone = input("Enter new phone: ")
+        new_email = input("Enter new email: ")
+        contact_manager.edit_contact(name, new_phone, new_email)
+    elif choice == "3":
+        name = input("Enter name to search: ")
+        contact_manager.search_contact(name)
+    elif choice == "4":
+        name = input("Enter name to delete: ")
+        contact_manager.delete_contact(name)
+    elif choice == "5":
+        contact_manager.list_contacts()
+    elif choice == "6":
+        break
+    else:
+        print("Invalid choice. Please try again.")
