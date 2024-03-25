@@ -2,17 +2,25 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
 
 class ContactManager:
-    def __init__(self, filename="contacts.xlsx"):
+    def __init__(self, filename):
         self.filename = filename
-        self.workbook = load_workbook(filename)
+        try:
+            self.workbook = load_workbook(filename)
+        except FileNotFoundError:
+            self.workbook = Workbook()
         self.sheet = self.workbook.active
-        self.add_headers()
 
-    def add_headers(self):
-        headers = ['Name', 'Phone', 'Email']
+        # Define headers if they don't exist
+        headers = ["Name", "Phone", "Email"]
+        if self.sheet.max_row == 0 or any(self.sheet.cell(row=1, column=col+1).value != header
+                                          for col, header in enumerate(headers)):
+            self.add_headers(headers)
+
+    def add_headers(self, headers):
         for col, header in enumerate(headers, start=1):
-            if self.sheet.cell(row=1, column=col).value is None:
-                self.sheet.cell(row=1, column=col, value=header).font = Font(bold=True)
+            cell = self.sheet.cell(row=1, column=col)
+            cell.value = header
+            cell.font = Font(bold=True)
 
     def add_contact(self, name, phone, email):
         next_row = self.sheet.max_row + 1
@@ -29,12 +37,10 @@ class ContactManager:
             print(f"Name: {name}, Phone: {phone}, Email: {email}")
 
 # Example usage
-contact_manager = ContactManager()
+contact_manager = ContactManager("contacts.xlsx")
 
-# Adding contacts
-contact_manager.add_contact("John Doe", "1234567890", "john@example.com")
-contact_manager.add_contact("Jane Smith", "0987654321", "jane@example.com")
+contact_manager.add_contact("John Doe", "123-456-7890", "john@example.com")
+contact_manager.add_contact("Jane Smith", "987-654-3210", "jane@example.com")
 
-# Listing contacts
-print("Listing all contacts:")
+print("Contacts:")
 contact_manager.list_contacts()
