@@ -18,6 +18,7 @@ class ContactManager:
                                           for col, header in enumerate(headers)):
             self.add_headers(headers)
 
+    #If headers already exist
     def add_headers(self, headers):
         for col, header in enumerate(headers, start=1):
             cell = self.sheet.cell(row=1, column=col)
