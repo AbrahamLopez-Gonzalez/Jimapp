@@ -1,5 +1,7 @@
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
+#We need openpyxl library to be able to create, read and write on excel
+#.styles is used in this case to manipulate if the Font is bold or normal
 
 class ContactManager:
     def __init__(self, filename):
