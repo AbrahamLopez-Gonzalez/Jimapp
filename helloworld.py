@@ -83,26 +83,34 @@ while True:
     print("6. Exit")
     choice = input("Enter your choice (1-6): ")
 
-    if choice == "1":
-        first_name = input("Enter first name: ")
-        last_name = input("Enter last name: ")
-        phone = input("Enter phone: ")
-        birthday = input("Enter birthday: ")
-        contact_manager.add_contact(first_name, last_name, phone, birthday)
-    elif choice == "2":
-        first_name = input("Enter first name of contact to edit: ")
-        new_phone = input("Enter new phone: ")
-        new_birthday = input("Enter new birthday: ")
-        contact_manager.edit_contact(first_name, new_phone, new_birthday)
-    elif choice == "3":
-        first_name = input("Enter first name to search: ")
-        contact_manager.search_contact(first_name)
-    elif choice == "4":
-        first_name = input("Enter first name to delete: ")
-        contact_manager.delete_contact(first_name)
-    elif choice == "5":
-        contact_manager.list_contacts()
-    elif choice == "6":
-        break
-    else:
-        print("Invalid choice. Please try again.")
+    match choice:
+        case "1":
+    # if choice == "1":
+            first_name = input("Enter first name: ")
+            last_name = input("Enter last name: ")
+            phone = input("Enter phone: ")
+            birthday = input("Enter birthday: ")
+            contact_manager.add_contact(first_name, last_name, phone, birthday)
+    # elif choice == "2":
+        case "2":
+            first_name = input("Enter first name of contact to edit: ")
+            new_phone = input("Enter new phone: ")
+            new_birthday = input("Enter new birthday: ")
+            contact_manager.edit_contact(first_name, new_phone, new_birthday)
+    # elif choice == "3":
+        case "3":
+            first_name = input("Enter first name to search: ")
+            contact_manager.search_contact(first_name)
+    # elif choice == "4":
+        case "4":
+            first_name = input("Enter first name to delete: ")
+            contact_manager.delete_contact(first_name)
+    # elif choice == "5":
+        case "5":
+            contact_manager.list_contacts()
+    # elif choice == "6":
+        case "6":
+            break
+    # else:
+        case _:
+            print("Invalid choice. Please try again.")
