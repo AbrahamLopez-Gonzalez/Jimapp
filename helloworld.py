@@ -13,7 +13,7 @@ class ContactManager:
         self.sheet = self.workbook.active
 
         # Define headers if they don't exist
-        headers = ["Name", "Phone", "Email"]
+        headers = ["F.Name", "L.Name", "Phone", "Birthday"]
         if self.sheet.max_row == 0 or any(self.sheet.cell(row=1, column=col+1).value != header
                                           for col, header in enumerate(headers)):
             self.add_headers(headers)
@@ -25,47 +25,50 @@ class ContactManager:
             cell.value = header
             cell.font = Font(bold=True)
 
-    def add_contact(self, name, phone, email):
+    def add_contact(self, first_name, last_name, phone, birthday):
         next_row = self.sheet.max_row + 1
-        self.sheet.cell(row=next_row, column=1, value=name)
-        self.sheet.cell(row=next_row, column=2, value=phone)
-        self.sheet.cell(row=next_row, column=3, value=email)
+        self.sheet.cell(row=next_row, column=1, value=first_name)
+        self.sheet.cell(row=next_row, column=2, value=last_name)
+        self.sheet.cell(row=next_row, column=3, value=phone)
+        self.sheet.cell(row=next_row, column=4, value=birthday)
         self.workbook.save(self.filename)
 
     def list_contacts(self):
         for row in range(2, self.sheet.max_row + 1):
-            name = self.sheet.cell(row=row, column=1).value
-            phone = self.sheet.cell(row=row, column=2).value
-            email = self.sheet.cell(row=row, column=3).value
-            print(f"Name: {name}, Phone: {phone}, Email: {email}")
+            first_name = self.sheet.cell(row=row, column=1).value
+            last_name = self.sheet.cell(row=row, column=2).value
+            phone = self.sheet.cell(row=row, column=3).value
+            birthday = self.sheet.cell(row=row, column=4).value
+            print(f"First Name: {first_name}, Last Name: {last_name}, Phone: {phone}, Birthday: {birthday}")
 
-    def edit_contact(self, name, new_phone, new_email):
+    def edit_contact(self, first_name, new_phone, new_birthday):
         for row in range(2, self.sheet.max_row + 1):
-            if self.sheet.cell(row=row, column=1).value == name:
-                self.sheet.cell(row=row, column=2, value=new_phone)
-                self.sheet.cell(row=row, column=3, value=new_email)
+            if self.sheet.cell(row=row, column=1).value == first_name:
+                self.sheet.cell(row=row, column=3, value=new_phone)
+                self.sheet.cell(row=row, column=4, value=new_birthday)
                 self.workbook.save(self.filename)
-                print(f"Contact '{name}' updated successfully.")
+                print(f"Contact '{first_name}' updated successfully.")
                 return
-        print(f"Contact '{name}' not found.")
+        print(f"Contact '{first_name}' not found.")
 
-    def search_contact(self, name):
+    def search_contact(self, first_name):
         for row in range(2, self.sheet.max_row + 1):
-            if self.sheet.cell(row=row, column=1).value == name:
-                phone = self.sheet.cell(row=row, column=2).value
-                email = self.sheet.cell(row=row, column=3).value
-                print(f"Name: {name}, Phone: {phone}, Email: {email}")
+            if self.sheet.cell(row=row, column=1).value == first_name:
+                last_name = self.sheet.cell(row=row, column=2).value
+                phone = self.sheet.cell(row=row, column=3).value
+                birthday = self.sheet.cell(row=row, column=4).value
+                print(f"Name: {first_name}, Last Name: {last_name}, Phone: {phone}, Birthday: {birthday}")
                 return
-        print(f"Contact '{name}' not found.")
+        print(f"Contact '{first_name}' not found.")
 
-    def delete_contact(self, name):
+    def delete_contact(self, first_name):
         for row in range(2, self.sheet.max_row + 1):
-            if self.sheet.cell(row=row, column=1).value == name:
+            if self.sheet.cell(row=row, column=1).value == first_name:
                 self.sheet.delete_rows(row, amount=1)
                 self.workbook.save(self.filename)
-                print(f"Contact '{name}' deleted successfully.")
+                print(f"Contact '{first_name}' deleted successfully.")
                 return
-        print(f"Contact '{name}' not found.")
+        print(f"Contact '{first_name}' not found.")
 
 # Example usage
 contact_manager = ContactManager("contacts.xlsx")
@@ -81,21 +84,22 @@ while True:
     choice = input("Enter your choice (1-6): ")
 
     if choice == "1":
-        name = input("Enter name: ")
+        first_name = input("Enter first name: ")
+        last_name = input("Enter last name: ")
         phone = input("Enter phone: ")
-        email = input("Enter email: ")
-        contact_manager.add_contact(name, phone, email)
+        birthday = input("Enter birthday: ")
+        contact_manager.add_contact(first_name, last_name, phone, birthday)
     elif choice == "2":
-        name = input("Enter name of contact to edit: ")
+        first_name = input("Enter first name of contact to edit: ")
         new_phone = input("Enter new phone: ")
-        new_email = input("Enter new email: ")
-        contact_manager.edit_contact(name, new_phone, new_email)
+        new_birthday = input("Enter new birthday: ")
+        contact_manager.edit_contact(first_name, new_phone, new_birthday)
     elif choice == "3":
-        name = input("Enter name to search: ")
-        contact_manager.search_contact(name)
+        first_name = input("Enter first name to search: ")
+        contact_manager.search_contact(first_name)
     elif choice == "4":
-        name = input("Enter name to delete: ")
-        contact_manager.delete_contact(name)
+        first_name = input("Enter first name to delete: ")
+        contact_manager.delete_contact(first_name)
     elif choice == "5":
         contact_manager.list_contacts()
     elif choice == "6":
