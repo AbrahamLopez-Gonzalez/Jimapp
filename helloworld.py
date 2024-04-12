@@ -1,7 +1,7 @@
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font
-#We need openpyxl library to be able to create, read and write on excel
-#.styles is used in this case to manipulate if the Font is bold or normal
+# We need openpyxl library to be able to create, read and write on excel
+# .styles is used in this case to manipulate if the Font is bold or normal
 
 class ContactManager:
     def __init__(self, filename):
@@ -70,7 +70,13 @@ class ContactManager:
                 return
         print(f"Contact '{first_name}' not found.")
 
-# Example usage
+    #Adding new functions to validate for user input 
+    # def phone_validation(self,phone):
+    #     if phone != int:#Validate input with the value range iterating through the string
+    #         print(f"The number: {phone} is not a valid number.\nRember, a phone number contains 10 digits.")
+    #         return
+
+# usage
 contact_manager = ContactManager("contacts.xlsx")
 
 while True:
@@ -87,19 +93,26 @@ while True:
         case "1":
     # if choice == "1":
             first_name = input("Enter first name: ")
+            # don't pass until != empty
             last_name = input("Enter last name: ")
+            # don't pass until != empty
             phone = input("Enter phone: ")
+            # don't pass until != empty
             birthday = input("Enter birthday: ")
+            # don't pass until != empty
+            # contact_manager.phone_validation(phone)
             contact_manager.add_contact(first_name, last_name, phone, birthday)
     # elif choice == "2":
         case "2":
             first_name = input("Enter first name of contact to edit: ")
+            # only accept fist name
             new_phone = input("Enter new phone: ")
             new_birthday = input("Enter new birthday: ")
             contact_manager.edit_contact(first_name, new_phone, new_birthday)
     # elif choice == "3":
         case "3":
             first_name = input("Enter first name to search: ")
+            # enter the lastname or add the wildcard search
             contact_manager.search_contact(first_name)
     # elif choice == "4":
         case "4":
