@@ -13,7 +13,7 @@ class ContactManager:
         self.sheet = self.workbook.active
 
         # Define headers if they don't exist
-        headers = ["F.Name", "L.Name", "Phone", "Birthday"]
+        headers = ["F.Name", "L.Name", "Phone", "Birthday.D", "Birthday.M", "Birthday.Y"]
         if self.sheet.max_row == 0 or any(self.sheet.cell(row=1, column=col+1).value != header
                                           for col, header in enumerate(headers)):
             self.add_headers(headers)
@@ -25,12 +25,14 @@ class ContactManager:
             cell.value = header
             cell.font = Font(bold=True)
 
-    def add_contact(self, first_name, last_name, phone, birthday):
+    def add_contact(self, first_name, last_name, phone, birthday_month, birthday_day, birthday_year):
         next_row = self.sheet.max_row + 1
         self.sheet.cell(row=next_row, column=1, value=first_name)
         self.sheet.cell(row=next_row, column=2, value=last_name)
         self.sheet.cell(row=next_row, column=3, value=phone)
-        self.sheet.cell(row=next_row, column=4, value=birthday)
+        self.sheet.cell(row=next_row, column=4, value=birthday_month)
+        self.sheet.cell(row=next_row, column=5, value=birthday_day)
+        self.sheet.cell(row=next_row, column=6, value=birthday_year)
         self.workbook.save(self.filename)
 
     def list_contacts(self):
@@ -38,14 +40,18 @@ class ContactManager:
             first_name = self.sheet.cell(row=row, column=1).value
             last_name = self.sheet.cell(row=row, column=2).value
             phone = self.sheet.cell(row=row, column=3).value
-            birthday = self.sheet.cell(row=row, column=4).value
-            print(f"First Name: {first_name}, Last Name: {last_name}, Phone: {phone}, Birthday: {birthday}")
+            birthday_month = self.sheet.cell(row=row, column=4).value
+            birthday_day = self.sheet.cell(row=row, column=5).value
+            birthday_year = self.sheet.cell(row=row, column=6).value
+            print(f"First Name: {first_name}, Last Name: {last_name}, Phone: {phone}, Birthday: {birthday_month} {birthday_day} {birthday_year}")
 
-    def edit_contact(self, first_name, new_phone, new_birthday):
+    def edit_contact(self, first_name, new_phone, new_birthday_month, new_birthday_day, new_birthday_year):
         for row in range(2, self.sheet.max_row + 1):
             if self.sheet.cell(row=row, column=1).value == first_name:
                 self.sheet.cell(row=row, column=3, value=new_phone)
-                self.sheet.cell(row=row, column=4, value=new_birthday)
+                self.sheet.cell(row=row, column=4, value=new_birthday_month)
+                self.sheet.cell(row=row, column=5, value=new_birthday_day)
+                self.sheet.cell(row=row, column=6, value=new_birthday_year)
                 self.workbook.save(self.filename)
                 print(f"Contact '{first_name}' updated successfully.")
                 return
@@ -70,13 +76,14 @@ class ContactManager:
                 return
         print(f"Contact '{first_name}' not found.")
 
-    #Adding new functions to validate for user input 
-    # def phone_validation(self,phone):
-    #     if phone != int:#Validate input with the value range iterating through the string
-    #         print(f"The number: {phone} is not a valid number.\nRember, a phone number contains 10 digits.")
-    #         return
+def validate_empty(ambiguos_input):
+    if ambiguos_input == "":
+        print("Please, enter valid input")
+        return True
+    else:
+        return False
 
-# usage
+# start of the code
 contact_manager = ContactManager("contacts.xlsx")
 
 while True:
@@ -91,39 +98,70 @@ while True:
 
     match choice:
         case "1":
-    # if choice == "1":
-            first_name = input("Enter first name: ")
+            while True:
+                first_name = input("Enter first name: ")
+                if not(validate_empty(first_name)) and (first_name.isalpha()):
+                    break
             # don't pass until != empty
-            last_name = input("Enter last name: ")
+            while True:
+                last_name = input("Enter last name: ")
+                if not(validate_empty(last_name)) and (last_name.isalpha()):
+                    break
             # don't pass until != empty
-            phone = input("Enter phone: ")
+            while True:
+                phone = input("Enter phone(0000000000): ")
+                if not(validate_empty(phone)) and (phone.isdigit()):
+                    break
             # don't pass until != empty
-            birthday = input("Enter birthday: ")
+            while True:
+                birthday_month = input("Enter birthday month(MM): ")
+                if not(validate_empty(birthday_month)) and (birthday_month.isdigit()):
+                    break
+            while True:
+                birthday_day = input("Enter birthday day(DD): ")
+                if not(validate_empty(birthday_day)) and (birthday_day.isdigit()):
+                    break
+            while True:
+                birthday_year = input("Enter birthday year(YYYY): ")
+                if not(validate_empty(birthday_year)) and (birthday_year.isdigit()):
+                    break
             # don't pass until != empty
             # contact_manager.phone_validation(phone)
-            contact_manager.add_contact(first_name, last_name, phone, birthday)
-    # elif choice == "2":
+            contact_manager.add_contact(first_name, last_name, phone, birthday_month, birthday_day, birthday_year)
         case "2":
             first_name = input("Enter first name of contact to edit: ")
-            # only accept fist name
-            new_phone = input("Enter new phone: ")
-            new_birthday = input("Enter new birthday: ")
-            contact_manager.edit_contact(first_name, new_phone, new_birthday)
-    # elif choice == "3":
+            while True:
+                new_phone = input("Enter new phone(0000000000): ")
+                if not(validate_empty(new_phone)) and (new_phone.isdigit()):
+                    break
+            while True:
+                new_birthday_month = input("Enter new birthday month(MM): ")
+                if not(validate_empty(new_birthday_month)) and (new_birthday_month.isdigit()):
+                    break
+            while True:
+                new_birthday_day = input("Enter new birthday day(DD): ")
+                if not(validate_empty(new_birthday_day)) and (new_birthday_day.isdigit()):
+                    break
+            while True:
+                new_birthday_year = input("Enter new birthday year(YYYY): ")
+                if not(validate_empty(new_birthday_year)) and (new_birthday_year.isdigit()):
+                    break
+            contact_manager.edit_contact(first_name, new_phone, new_birthday_month, new_birthday_day, new_birthday_year)
         case "3":
-            first_name = input("Enter first name to search: ")
-            # enter the lastname or add the wildcard search
+            while True:
+                first_name = input("Enter first name to search: ")
+                if not(validate_empty(first_name)) and (first_name.isalpha()):
+                    break
             contact_manager.search_contact(first_name)
-    # elif choice == "4":
         case "4":
-            first_name = input("Enter first name to delete: ")
+            while True:
+                first_name = input("Enter first name to delete: ")
+                if not(validate_empty(first_name)) and (first_name.isalpha()):
+                    break
             contact_manager.delete_contact(first_name)
-    # elif choice == "5":
         case "5":
             contact_manager.list_contacts()
-    # elif choice == "6":
         case "6":
             break
-    # else:
         case _:
             print("Invalid choice. Please try again.")
